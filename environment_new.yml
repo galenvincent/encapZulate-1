@@ -6,8 +6,7 @@ channels:
 dependencies:
   - _anaconda_depends=2020.07
   - _libgcc_mutex=0.1
-  - _openmp_mutex=4.5
-  - _tflow_select=2.1.0
+  - _tflow_select
   - absl-py=0.11.0
   - alabaster=0.7.12
   - anaconda=custom
@@ -57,9 +56,7 @@ dependencies:
   - contextlib2=0.6.0.post1
   - contextvars=2.4
   - cryptography=3.3.1
-  - cudatoolkit=10.0.130
-  - cudnn=7.6.5.32
-  - cupti=10.0.130
+  - cudatoolkit
   - curl=7.71.1
   - cycler=0.10.0
   - cython=0.29.21
@@ -156,9 +153,8 @@ dependencies:
   - libedit=3.1.20191231
   - libev=4.33
   - libffi=3.3
-  - libgcc=7.2.0
-  - libgcc-ng=9.3.0
-  - libgfortran-ng=7.5.0
+  - libgcc
+  - libgfortran-ng
   - libgfortran4=7.5.0
   - libiconv=1.16
   - liblapack=3.9.0
@@ -173,13 +169,11 @@ dependencies:
   - libsodium=1.0.18
   - libspatialindex=1.9.3
   - libssh2=1.9.0
-  - libstdcxx-ng=9.3.0
   - libtiff=4.2.0
   - libtool=2.4.6
   - libuuid=1.0.3
   - libwebp-base=1.1.0
-  - libxcb=1.14
-  - libxkbcommon=0.10.0
+  - libxcb
   - libxml2=2.9.12
   - libxslt=1.1.34
   - llvm-openmp=11.0.0
@@ -232,7 +226,7 @@ dependencies:
   - pango=1.42.4
   - param=1.10.1
   - partd=1.1.0
-  - patchelf=0.11
+  - patchelf
   - path=15.0.1
   - path.py=12.5.0
   - pathlib2=2.3.5
@@ -302,7 +296,7 @@ dependencies:
   - scipy=1.5.3
   - seaborn=0.11.1
   - seaborn-base=0.11.1
-  - secretstorage=3.3.0
+  - secretstorage
   - send2trash=1.5.0
   - simplegeneric=0.8.1
   - singledispatch=3.4.0.3
