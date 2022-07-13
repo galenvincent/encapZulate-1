@@ -1,5 +1,49 @@
 import tensorflow as tf
+import numpy as np
 from keras import backend as K
+from scipy.stats import norm as normal
+
+def mse_radius(**kwargs):
+    def mse_radius_metric(y_true, y_pred):
+        """ MSE across pixels, weighted by radius from center of image by function of radius
+        Args:
+            y_true (tensor): [None, height, width, channels]
+            y_pred (tensor): [None, height, width, channels]
+
+        Returns:
+            Weighted MSE across the batch.
+        """
+        
+        grid_scale = kwargs['grid_scale']
+        n_grid = kwargs['image_shape'][0:2] # Size of input image
+
+        num_channels = y_true.shape[-1] # number of channels in your input images
+
+        y = np.linspace(-1*(int(n_grid[0]) - 1)/2.0, (int(n_grid[0]) - 1)/2.0, int(n_grid[0]))
+        x = np.linspace(-1*(int(n_grid[1]) - 1)/2.0, (int(n_grid[1]) - 1)/2.0, int(n_grid[1]))
+        xx, yy = np.meshgrid(x, np.flip(y))
+        dist_grid = np.sqrt(np.power(xx, 2) + np.power(yy, 2))
+        dist_km = dist_grid*grid_scale
+
+        gaus_scale = 2*kwargs['hwhm']/2.355 # Set HWHM to be equal to value given in config file
+
+        weight_fn = lambda x: normal.pdf(x, scale = gaus_scale) * 100
+
+        weights = weight_fn(dist_km)
+        weights = np.expand_dims(weights, axis = 2)
+        if num_channels > 1:
+            weights_channels = np.repeat(weights, num_channels, axis = 2)
+        else:
+            weights_channels = weights
+        weights_normed = np.divide(weights_channels, np.sum(weights_channels))
+        
+        weights_tf = tf.constant(weights_normed, dtype = 'float32')
+
+        loss_by_sample = K.sum(K.pow(y_true - y_pred, 2) * weights_tf, axis = (1, 2, 3))
+
+        return K.mean(loss_by_sample)
+    
+    return mse_radius_metric
 
 
 def mqe(y_true, y_pred):

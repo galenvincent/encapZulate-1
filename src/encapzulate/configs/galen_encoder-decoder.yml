@@ -1,40 +1,42 @@
 # NOTE: Man model returms masked caps
+# NOTE: Commented out lines are only needed for Biprateep's model.
+
 # Run
-run_name: galen_test # Run name
-num_gpus: 2 # Number of gpus to use
+run_name: encoder-decoder # Run name
+num_gpus: 4 # Number of gpus to use
 compile_on: gpu # Compile model on 'cpu' or 'gpu'
 
 # Data
 path_data: /ocean/projects/dms190029p/gvincent/tc-rmw-data # If None, automatically search for the data
 dataset: satellite_images_clean # Name of the image data set
 dataset_aux: tc_data_clean # Name of the data set containing additional TC info (including labels)
+dataloader: GOES
 image_shape: (200, 200, 1) # Image shape (height, width, channels)
 #bands: u,g, r, i,z # Bands to use
+class_var: intensity # One of {intensity, eye}. Should we classify based on presence of an eye, or on storm category?
+eye_check: include # One of {include, exclude, return}. 
 num_class: 3 # Number of classes for the classification
 max_year_train: 2016 # Maximum year (inclusive) to use for training data
 max_year_dev: 2018 # Maximum year (inclusive) to use for development data (max_year_train < year <= max_year_dev). Remaining years go to test set.
 random_state: 200 # random seed
-image_scale: 1.0 #divide all pixels by this number
-#use_vals: False # whether to use catalog values
-#logistic: True # Whether to use logistic transform for z
-#z_max: 0.4 # maximum z for logistic transform
-#z_min: 0.0 # minimum z for logistic transform
+image_scale: 50.0 # divide all pixels by this number
+class_weights: [1.0, 1.0, 1.0] # weights for oversampling of each class. See DataGenerator function in data_loader.py for more info.
+grid_scale: 4.0 # km/grid spacing
 
 # Model
-model_name: morphCapsDeep_2 # Name of the model
+model_name: # Name of the model
 routings: 3 # Number of routing steps for the dynamic routing algorithm
 dim_capsule: 16 # Dimension of the vector space for each capsule
-batch_size: 400 # Batch size for the data ingestion
-#num_quantiles: False #number of quantiles to use for quantile regression. use mse if 0
+batch_size: 200 # Batch size for the data ingestion
 
 # Training
 epochs: 100 # Number of epochs to run the training
 checkpoint: # Epoch at which to start training. Use None if starting fresh.
 learning_rate: 0.001 # Initial learning rate
 decay_rate: 0.95 # Decay rate of the learning rate
-lam_recon: 0.005 # penalty for the sum of square error for the regulariser decoder
-lam_redshift: 2 # 100 is a good number for mse without logistic
-img_augmentation: 1 #0 for no augmentation, n for n*data_size of augmented data
+lam_recon: 0.75 # penalty for the sum of square error for the regulariser decoder
+#lam_redshift: 2 # 100 is a good number for mse without logistic
+hwhm: 175.0 # half-width at half-max for the gaussian kernel in the reconstruction loss function
 
 # Output
 timeline: False # create a TF Timeline
